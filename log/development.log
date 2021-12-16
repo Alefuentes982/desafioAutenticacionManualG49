@@ -1,0 +1,425 @@
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[35m (94.1ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY)[0m
+  [1m[35m (94.3ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateStories (20190227134331)
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TABLE "stories" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar, "picture" varchar, "content" text, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20190227134331"]]
+  [1m[35m (93.3ms)[0m  [1m[36mcommit transaction[0m
+Migrating to DeviseCreateUsers (20210228182014)
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCREATE TABLE "users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar, "encrypted_password" varchar DEFAULT '' NOT NULL, "reset_password_token" varchar, "reset_password_sent_at" datetime, "remember_created_at" datetime, "name" varchar, "admin" boolean, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_email" ON "users" ("email")[0m
+  [1m[35m (0.2ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_email' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_email' AND type='index'
+[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_reset_password_token" ON "users" ("reset_password_token")[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20210228182014"]]
+  [1m[35m (122.5ms)[0m  [1m[36mcommit transaction[0m
+Migrating to AddUserIdToStories (20210301205145)
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.5ms)[0m  [1m[35mALTER TABLE "stories" ADD "user_id" integer[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE  INDEX "index_stories_on_user_id" ON "stories" ("user_id")[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20210301205145"]]
+  [1m[35m (95.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.2ms)[0m  [1m[34mSELECT  "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? LIMIT ?[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["key", "environment"], ["value", "development"], ["created_at", "2021-12-16 03:55:56.493288"], ["updated_at", "2021-12-16 03:55:56.493288"]]
+  [1m[35m (110.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_stories_on_user_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_stories_on_user_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_reset_password_token' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_reset_password_token' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_email' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_email' AND type='index'
+[0m
+Started GET "/" for 127.0.0.1 at 2021-12-16 00:56:09 -0300
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by StoriesController#index as HTML
+  Rendering stories/index.html.erb within layouts/application
+  [1m[36mStory Load (0.2ms)[0m  [1m[34mSELECT "stories".* FROM "stories"[0m
+  Rendered stories/index.html.erb within layouts/application (2.7ms)
+  Rendered shared/_navbar.html.erb (3.1ms)
+Completed 200 OK in 553ms (Views: 541.6ms | ActiveRecord: 0.5ms)
+
+
+Started GET "/users/sign_in" for 127.0.0.1 at 2021-12-16 00:56:18 -0300
+Processing by Devise::SessionsController#new as HTML
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.3ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (71.2ms)
+  Rendered shared/_navbar.html.erb (1.6ms)
+Completed 200 OK in 137ms (Views: 105.9ms | ActiveRecord: 1.2ms)
+
+
+Started POST "/users/sign_in" for 127.0.0.1 at 2021-12-16 01:00:17 -0300
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"9KJQiX5+bM5lyrlsY5nqtmW62mUHaJI9vqkSx8MM5UwBNBmlRMI/+R1cHBpOYMBnyLK7hOHn82rfvXVAW4v0jA==", "user"=>{"email"=>"jano231982@gmail.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."email" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["email", "jano231982@gmail.com"], ["LIMIT", 1]]
+Completed 401 Unauthorized in 10ms (ActiveRecord: 0.4ms)
+
+
+Processing by Devise::SessionsController#new as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"9KJQiX5+bM5lyrlsY5nqtmW62mUHaJI9vqkSx8MM5UwBNBmlRMI/+R1cHBpOYMBnyLK7hOHn82rfvXVAW4v0jA==", "user"=>{"email"=>"jano231982@gmail.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.3ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (7.1ms)
+  Rendered shared/_navbar.html.erb (0.8ms)
+Completed 200 OK in 318ms (Views: 38.9ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/users/sign_up" for 127.0.0.1 at 2021-12-16 01:00:22 -0300
+Processing by Devise::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_error_messages.html.erb (0.9ms)
+  Rendered devise/shared/_links.html.erb (1.0ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (13.7ms)
+  Rendered shared/_navbar.html.erb (0.7ms)
+Completed 200 OK in 36ms (Views: 34.3ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/users" for 127.0.0.1 at 2021-12-16 01:00:44 -0300
+Processing by Devise::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"9RswF002wg8E5q7R1ykHko1++Yvm3BkiT1iNUIPBhwVXMVvpnNv6AvqX+eJ9iWl1ktAi3SCY1PtKngAues8ILw==", "user"=>{"email"=>"jano231982@gmail.com", "name"=>"alejandro", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "commit"=>"Sign up"}
+Unpermitted parameter: :password_confirmation
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Exists (0.2ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "jano231982@gmail.com"], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_error_messages.html.erb (1.0ms)
+  Rendered devise/shared/_links.html.erb (0.9ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (7.7ms)
+  Rendered shared/_navbar.html.erb (0.8ms)
+Completed 200 OK in 308ms (Views: 29.5ms | ActiveRecord: 0.3ms)
+
+
+Started POST "/users" for 127.0.0.1 at 2021-12-16 01:00:56 -0300
+Processing by Devise::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"HoqbI5R9m4+r90ncrV7ey8dMWtmWd3MAvlNJKVFlz5B+lNw/d+UZVXhchO6Dy0PJyMY79HxonKhZYUr0RpXiAg==", "user"=>{"email"=>"jano231982@gmail.com", "name"=>"alejandro", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "commit"=>"Sign up"}
+Unpermitted parameter: :password_confirmation
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Exists (0.1ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "jano231982@gmail.com"], ["LIMIT", 1]]
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "name", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["email", "jano231982@gmail.com"], ["encrypted_password", "$2a$12$3RvXg4/wQ.ULTbLZ/Wx.oupFjZe/3eE8EuyNSBvpmxBQGtfhinTSG"], ["name", "alejandro"], ["created_at", "2021-12-16 04:00:57.155910"], ["updated_at", "2021-12-16 04:00:57.155910"]]
+  [1m[35m (106.3ms)[0m  [1m[36mcommit transaction[0m
+Redirected to http://localhost:3000/
+Completed 302 Found in 386ms (ActiveRecord: 107.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2021-12-16 01:00:57 -0300
+Processing by StoriesController#index as HTML
+  Rendering stories/index.html.erb within layouts/application
+  [1m[36mStory Load (0.3ms)[0m  [1m[34mSELECT "stories".* FROM "stories"[0m
+  Rendered stories/index.html.erb within layouts/application (2.4ms)
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered shared/_navbar.html.erb (3.5ms)
+Completed 200 OK in 36ms (Views: 33.7ms | ActiveRecord: 0.5ms)
+
+
+Started GET "/stories/new" for 127.0.0.1 at 2021-12-16 01:01:04 -0300
+Processing by StoriesController#new as HTML
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  Rendering stories/new.html.erb within layouts/application
+  Rendered stories/_form.html.erb (3.7ms)
+  Rendered stories/new.html.erb within layouts/application (4.9ms)
+  Rendered shared/_navbar.html.erb (1.1ms)
+Completed 200 OK in 50ms (Views: 28.6ms | ActiveRecord: 0.6ms)
+
+
+Started POST "/stories" for 127.0.0.1 at 2021-12-16 01:01:15 -0300
+Processing by StoriesController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"MbQtznTqHqclhL6vT5wsSpigwCnY0kEXlOSqoBYVzeFPCAznmPcfH1zc1DNw38sVwp2NFTMxc/0AnPNl7RQxpA==", "story"=>{"title"=>"errr", "picture"=>"/home/ale/Escritorio/desafioLatam/clone/PicStory-main/app /home/ale/Escritorio/desafioLatam/clone/PicStory-main/bin /home/ale/Escritorio/desafioLatam/clone/PicStory-main/config /home/ale/Escritorio/desafioLatam/clone/PicStory-main/config.ru /home/ale/Escritorio/desafioLatam/clone/PicStory-main/db /home/ale/Escritorio/desafioLatam/clone/PicStory-main/Gemfile /home/ale/Escritorio/desafioLatam/clone/PicStory-main/Gemfile.lock /home/ale/Escritorio/desafioLatam/clone/PicStory-main/lib /home/ale/Escritorio/desafioLatam/clone/PicStory-main/log /home/ale/Escritorio/desafioLatam/clone/PicStory-main/package.json /home/ale/Escritorio/desafioLatam/clone/PicStory-main/public /home/ale/Escritorio/desafioLatam/clone/PicStory-main/Rakefile /home/ale/Escritorio/desafioLatam/clone/PicStory-main/README.md /home/ale/Escritorio/desafioLatam/clone/PicStory-main/test /home/ale/Escritorio/desafioLatam/clone/PicStory-main/tmp /home/ale/Escritorio/desafioLatam/clone/PicStory-main/vendor", "content"=>"gfrerg", "user_id"=>"1"}, "commit"=>"Create Story"}
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (5.0ms)[0m  [1m[32mINSERT INTO "stories" ("title", "picture", "content", "created_at", "updated_at", "user_id") VALUES (?, ?, ?, ?, ?, ?)[0m  [["title", "errr"], ["picture", "/home/ale/Escritorio/desafioLatam/clone/PicStory-main/app /home/ale/Escritorio/desafioLatam/clone/PicStory-main/bin /home/ale/Escritorio/desafioLatam/clone/PicStory-main/config /home/ale/Escritorio/desafioLatam/clone/PicStory-main/config.ru /home/ale/Escritorio/desafioLatam/clone/PicStory-main/db /home/ale/Escritorio/desafioLatam/clone/PicStory-main/Gemfile /home/ale/Escritorio/desafioLatam/clone/PicStory-main/Gemfile.lock /home/ale/Escritorio/desafioLatam/clone/PicStory-main/lib /home/ale/Escritorio/desafioLatam/clone/PicStory-main/log /home/ale/Escritorio/desafioLatam/clone/PicStory-main/package.json /home/ale/Escritorio/desafioLatam/clone/PicStory-main/public /home/ale/Escritorio/desafioLatam/clone/PicStory-main/Rakefile /home/ale/Escritorio/desafioLatam/clone/PicStory-main/README.md /home/ale/Escritorio/desafioLatam/clone/PicStory-main/test /home/ale/Escritorio/desafioLatam/clone/PicStory-main/tmp /home/ale/Escritorio/desafioLatam/clone/PicStory-main/vendor"], ["content", "gfrerg"], ["created_at", "2021-12-16 04:01:15.195364"], ["updated_at", "2021-12-16 04:01:15.195364"], ["user_id", 1]]
+  [1m[35m (186.9ms)[0m  [1m[36mcommit transaction[0m
+Redirected to http://localhost:3000/stories/1
+Completed 302 Found in 204ms (ActiveRecord: 192.6ms)
+
+
+Started GET "/stories/1" for 127.0.0.1 at 2021-12-16 01:01:15 -0300
+Processing by StoriesController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mStory Load (0.2ms)[0m  [1m[34mSELECT  "stories".* FROM "stories" WHERE "stories"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  Rendering stories/show.html.erb within layouts/application
+  Rendered stories/show.html.erb within layouts/application (2.3ms)
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered shared/_navbar.html.erb (3.6ms)
+Completed 200 OK in 28ms (Views: 24.9ms | ActiveRecord: 0.7ms)
+
+
+Started GET "/home/ale/Escritorio/desafioLatam/clone/PicStory-main/app%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/bin%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/config%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/config.ru%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/db%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/Gemfile%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/Gemfile.lock%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/lib%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/log%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/package.json%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/public%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/Rakefile%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/README.md%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/test%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/tmp%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/vendor" for 127.0.0.1 at 2021-12-16 01:01:15 -0300
+  
+ActionController::RoutingError (No route matches [GET] "/home/ale/Escritorio/desafioLatam/clone/PicStory-main/app%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/bin%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/config%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/config.ru%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/db%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/Gemfile%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/Gemfile.lock%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/lib%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/log%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/package.json%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/public%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/Rakefile%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/README.md%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/test%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/tmp%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/vendor"):
+  
+actionpack (5.1.6.1) lib/action_dispatch/middleware/debug_exceptions.rb:63:in `call'
+web-console (3.7.0) lib/web_console/middleware.rb:135:in `call_app'
+web-console (3.7.0) lib/web_console/middleware.rb:30:in `block in call'
+web-console (3.7.0) lib/web_console/middleware.rb:20:in `catch'
+web-console (3.7.0) lib/web_console/middleware.rb:20:in `call'
+actionpack (5.1.6.1) lib/action_dispatch/middleware/show_exceptions.rb:31:in `call'
+railties (5.1.6.1) lib/rails/rack/logger.rb:36:in `call_app'
+railties (5.1.6.1) lib/rails/rack/logger.rb:24:in `block in call'
+activesupport (5.1.6.1) lib/active_support/tagged_logging.rb:69:in `block in tagged'
+activesupport (5.1.6.1) lib/active_support/tagged_logging.rb:26:in `tagged'
+activesupport (5.1.6.1) lib/active_support/tagged_logging.rb:69:in `tagged'
+railties (5.1.6.1) lib/rails/rack/logger.rb:24:in `call'
+sprockets-rails (3.2.1) lib/sprockets/rails/quiet_assets.rb:13:in `call'
+actionpack (5.1.6.1) lib/action_dispatch/middleware/remote_ip.rb:79:in `call'
+actionpack (5.1.6.1) lib/action_dispatch/middleware/request_id.rb:25:in `call'
+rack (2.0.6) lib/rack/method_override.rb:22:in `call'
+rack (2.0.6) lib/rack/runtime.rb:22:in `call'
+activesupport (5.1.6.1) lib/active_support/cache/strategy/local_cache_middleware.rb:27:in `call'
+actionpack (5.1.6.1) lib/action_dispatch/middleware/executor.rb:12:in `call'
+actionpack (5.1.6.1) lib/action_dispatch/middleware/static.rb:125:in `call'
+rack (2.0.6) lib/rack/sendfile.rb:111:in `call'
+railties (5.1.6.1) lib/rails/engine.rb:522:in `call'
+puma (3.12.0) lib/puma/configuration.rb:225:in `call'
+puma (3.12.0) lib/puma/server.rb:658:in `handle_request'
+puma (3.12.0) lib/puma/server.rb:472:in `process_client'
+puma (3.12.0) lib/puma/server.rb:332:in `block in run'
+puma (3.12.0) lib/puma/thread_pool.rb:133:in `block in spawn_thread'
+Started GET "/stories" for 127.0.0.1 at 2021-12-16 01:01:19 -0300
+Processing by StoriesController#index as HTML
+  Rendering stories/index.html.erb within layouts/application
+  [1m[36mStory Load (0.3ms)[0m  [1m[34mSELECT "stories".* FROM "stories"[0m
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered stories/index.html.erb within layouts/application (5.0ms)
+  Rendered shared/_navbar.html.erb (1.1ms)
+Completed 200 OK in 33ms (Views: 30.4ms | ActiveRecord: 0.6ms)
+
+
+Started GET "/home/ale/Escritorio/desafioLatam/clone/PicStory-main/app%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/bin%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/config%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/config.ru%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/db%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/Gemfile%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/Gemfile.lock%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/lib%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/log%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/package.json%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/public%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/Rakefile%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/README.md%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/test%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/tmp%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/vendor" for 127.0.0.1 at 2021-12-16 01:01:19 -0300
+  
+ActionController::RoutingError (No route matches [GET] "/home/ale/Escritorio/desafioLatam/clone/PicStory-main/app%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/bin%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/config%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/config.ru%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/db%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/Gemfile%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/Gemfile.lock%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/lib%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/log%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/package.json%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/public%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/Rakefile%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/README.md%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/test%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/tmp%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/vendor"):
+  
+actionpack (5.1.6.1) lib/action_dispatch/middleware/debug_exceptions.rb:63:in `call'
+web-console (3.7.0) lib/web_console/middleware.rb:135:in `call_app'
+web-console (3.7.0) lib/web_console/middleware.rb:30:in `block in call'
+web-console (3.7.0) lib/web_console/middleware.rb:20:in `catch'
+web-console (3.7.0) lib/web_console/middleware.rb:20:in `call'
+actionpack (5.1.6.1) lib/action_dispatch/middleware/show_exceptions.rb:31:in `call'
+railties (5.1.6.1) lib/rails/rack/logger.rb:36:in `call_app'
+railties (5.1.6.1) lib/rails/rack/logger.rb:24:in `block in call'
+activesupport (5.1.6.1) lib/active_support/tagged_logging.rb:69:in `block in tagged'
+activesupport (5.1.6.1) lib/active_support/tagged_logging.rb:26:in `tagged'
+activesupport (5.1.6.1) lib/active_support/tagged_logging.rb:69:in `tagged'
+railties (5.1.6.1) lib/rails/rack/logger.rb:24:in `call'
+sprockets-rails (3.2.1) lib/sprockets/rails/quiet_assets.rb:13:in `call'
+actionpack (5.1.6.1) lib/action_dispatch/middleware/remote_ip.rb:79:in `call'
+actionpack (5.1.6.1) lib/action_dispatch/middleware/request_id.rb:25:in `call'
+rack (2.0.6) lib/rack/method_override.rb:22:in `call'
+rack (2.0.6) lib/rack/runtime.rb:22:in `call'
+activesupport (5.1.6.1) lib/active_support/cache/strategy/local_cache_middleware.rb:27:in `call'
+actionpack (5.1.6.1) lib/action_dispatch/middleware/executor.rb:12:in `call'
+actionpack (5.1.6.1) lib/action_dispatch/middleware/static.rb:125:in `call'
+rack (2.0.6) lib/rack/sendfile.rb:111:in `call'
+railties (5.1.6.1) lib/rails/engine.rb:522:in `call'
+puma (3.12.0) lib/puma/configuration.rb:225:in `call'
+puma (3.12.0) lib/puma/server.rb:658:in `handle_request'
+puma (3.12.0) lib/puma/server.rb:472:in `process_client'
+puma (3.12.0) lib/puma/server.rb:332:in `block in run'
+puma (3.12.0) lib/puma/thread_pool.rb:133:in `block in spawn_thread'
+Started GET "/stories/1" for 127.0.0.1 at 2021-12-16 01:01:24 -0300
+Processing by StoriesController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mStory Load (0.1ms)[0m  [1m[34mSELECT  "stories".* FROM "stories" WHERE "stories"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  Rendering stories/show.html.erb within layouts/application
+  Rendered stories/show.html.erb within layouts/application (1.6ms)
+Started GET "/home/ale/Escritorio/desafioLatam/clone/PicStory-main/app%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/bin%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/config%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/config.ru%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/db%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/Gemfile%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/Gemfile.lock%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/lib%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/log%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/package.json%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/public%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/Rakefile%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/README.md%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/test%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/tmp%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/vendor" for 127.0.0.1 at 2021-12-16 01:01:24 -0300
+  
+ActionController::RoutingError (No route matches [GET] "/home/ale/Escritorio/desafioLatam/clone/PicStory-main/app%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/bin%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/config%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/config.ru%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/db%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/Gemfile%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/Gemfile.lock%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/lib%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/log%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/package.json%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/public%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/Rakefile%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/README.md%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/test%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/tmp%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/vendor"):
+  
+actionpack (5.1.6.1) lib/action_dispatch/middleware/debug_exceptions.rb:63:in `call'
+web-console (3.7.0) lib/web_console/middleware.rb:135:in `call_app'
+web-console (3.7.0) lib/web_console/middleware.rb:30:in `block in call'
+web-console (3.7.0) lib/web_console/middleware.rb:20:in `catch'
+web-console (3.7.0) lib/web_console/middleware.rb:20:in `call'
+actionpack (5.1.6.1) lib/action_dispatch/middleware/show_exceptions.rb:31:in `call'
+railties (5.1.6.1) lib/rails/rack/logger.rb:36:in `call_app'
+railties (5.1.6.1) lib/rails/rack/logger.rb:24:in `block in call'
+activesupport (5.1.6.1) lib/active_support/tagged_logging.rb:69:in `block in tagged'
+activesupport (5.1.6.1) lib/active_support/tagged_logging.rb:26:in `tagged'
+activesupport (5.1.6.1) lib/active_support/tagged_logging.rb:69:in `tagged'
+railties (5.1.6.1) lib/rails/rack/logger.rb:24:in `call'
+sprockets-rails (3.2.1) lib/sprockets/rails/quiet_assets.rb:13:in `call'
+actionpack (5.1.6.1) lib/action_dispatch/middleware/remote_ip.rb:79:in `call'
+actionpack (5.1.6.1) lib/action_dispatch/middleware/request_id.rb:25:in `call'
+rack (2.0.6) lib/rack/method_override.rb:22:in `call'
+rack (2.0.6) lib/rack/runtime.rb:22:in `call'
+activesupport (5.1.6.1) lib/active_support/cache/strategy/local_cache_middleware.rb:27:in `call'
+actionpack (5.1.6.1) lib/action_dispatch/middleware/executor.rb:12:in `call'
+actionpack (5.1.6.1) lib/action_dispatch/middleware/static.rb:125:in `call'
+rack (2.0.6) lib/rack/sendfile.rb:111:in `call'
+railties (5.1.6.1) lib/rails/engine.rb:522:in `call'
+puma (3.12.0) lib/puma/configuration.rb:225:in `call'
+puma (3.12.0) lib/puma/server.rb:658:in `handle_request'
+puma (3.12.0) lib/puma/server.rb:472:in `process_client'
+puma (3.12.0) lib/puma/server.rb:332:in `block in run'
+puma (3.12.0) lib/puma/thread_pool.rb:133:in `block in spawn_thread'
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered shared/_navbar.html.erb (1.6ms)
+Completed 200 OK in 42ms (Views: 39.5ms | ActiveRecord: 0.3ms)
+
+
+Started GET "/stories" for 127.0.0.1 at 2021-12-16 01:01:27 -0300
+Processing by StoriesController#index as HTML
+  Rendering stories/index.html.erb within layouts/application
+  [1m[36mStory Load (0.3ms)[0m  [1m[34mSELECT "stories".* FROM "stories"[0m
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered stories/index.html.erb within layouts/application (5.5ms)
+Started GET "/home/ale/Escritorio/desafioLatam/clone/PicStory-main/app%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/bin%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/config%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/config.ru%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/db%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/Gemfile%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/Gemfile.lock%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/lib%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/log%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/package.json%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/public%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/Rakefile%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/README.md%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/test%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/tmp%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/vendor" for 127.0.0.1 at 2021-12-16 01:01:27 -0300
+  
+ActionController::RoutingError (No route matches [GET] "/home/ale/Escritorio/desafioLatam/clone/PicStory-main/app%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/bin%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/config%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/config.ru%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/db%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/Gemfile%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/Gemfile.lock%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/lib%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/log%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/package.json%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/public%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/Rakefile%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/README.md%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/test%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/tmp%20/home/ale/Escritorio/desafioLatam/clone/PicStory-main/vendor"):
+  
+actionpack (5.1.6.1) lib/action_dispatch/middleware/debug_exceptions.rb:63:in `call'
+web-console (3.7.0) lib/web_console/middleware.rb:135:in `call_app'
+web-console (3.7.0) lib/web_console/middleware.rb:30:in `block in call'
+web-console (3.7.0) lib/web_console/middleware.rb:20:in `catch'
+web-console (3.7.0) lib/web_console/middleware.rb:20:in `call'
+actionpack (5.1.6.1) lib/action_dispatch/middleware/show_exceptions.rb:31:in `call'
+railties (5.1.6.1) lib/rails/rack/logger.rb:36:in `call_app'
+railties (5.1.6.1) lib/rails/rack/logger.rb:24:in `block in call'
+activesupport (5.1.6.1) lib/active_support/tagged_logging.rb:69:in `block in tagged'
+activesupport (5.1.6.1) lib/active_support/tagged_logging.rb:26:in `tagged'
+activesupport (5.1.6.1) lib/active_support/tagged_logging.rb:69:in `tagged'
+railties (5.1.6.1) lib/rails/rack/logger.rb:24:in `call'
+sprockets-rails (3.2.1) lib/sprockets/rails/quiet_assets.rb:13:in `call'
+actionpack (5.1.6.1) lib/action_dispatch/middleware/remote_ip.rb:79:in `call'
+actionpack (5.1.6.1) lib/action_dispatch/middleware/request_id.rb:25:in `call'
+rack (2.0.6) lib/rack/method_override.rb:22:in `call'
+rack (2.0.6) lib/rack/runtime.rb:22:in `call'
+activesupport (5.1.6.1) lib/active_support/cache/strategy/local_cache_middleware.rb:27:in `call'
+actionpack (5.1.6.1) lib/action_dispatch/middleware/executor.rb:12:in `call'
+actionpack (5.1.6.1) lib/action_dispatch/middleware/static.rb:125:in `call'
+rack (2.0.6) lib/rack/sendfile.rb:111:in `call'
+railties (5.1.6.1) lib/rails/engine.rb:522:in `call'
+puma (3.12.0) lib/puma/configuration.rb:225:in `call'
+puma (3.12.0) lib/puma/server.rb:658:in `handle_request'
+puma (3.12.0) lib/puma/server.rb:472:in `process_client'
+puma (3.12.0) lib/puma/server.rb:332:in `block in run'
+puma (3.12.0) lib/puma/thread_pool.rb:133:in `block in spawn_thread'
+  Rendered shared/_navbar.html.erb (0.8ms)
+Completed 200 OK in 57ms (Views: 53.9ms | ActiveRecord: 0.5ms)
+
+
+Started DELETE "/stories/1" for 127.0.0.1 at 2021-12-16 01:01:30 -0300
+Processing by StoriesController#destroy as HTML
+  Parameters: {"authenticity_token"=>"EAYDSdGgw8K8Z98psU/MeEyiLJM834JwZ9RFpgk+J+twGERVMjhBGG/MEhuf2lF6QyhNvtbAbdiA5kZ7Hs4KeQ==", "id"=>"1"}
+  [1m[36mStory Load (0.3ms)[0m  [1m[34mSELECT  "stories".* FROM "stories" WHERE "stories"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mStory Load (0.2ms)[0m  [1m[34mSELECT  "stories".* FROM "stories" WHERE "stories"."user_id" = ? AND "stories"."id" = ? LIMIT ?[0m  [["user_id", 1], ["id", 1], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[31mDELETE FROM "stories" WHERE "stories"."id" = ?[0m  [["id", 1]]
+  [1m[35m (122.0ms)[0m  [1m[36mcommit transaction[0m
+Redirected to http://localhost:3000/stories
+Completed 302 Found in 133ms (ActiveRecord: 123.3ms)
+
+
+Started GET "/stories" for 127.0.0.1 at 2021-12-16 01:01:31 -0300
+Processing by StoriesController#index as HTML
+  Rendering stories/index.html.erb within layouts/application
+  [1m[36mStory Load (0.2ms)[0m  [1m[34mSELECT "stories".* FROM "stories"[0m
+  Rendered stories/index.html.erb within layouts/application (2.7ms)
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered shared/_navbar.html.erb (2.6ms)
+Completed 200 OK in 34ms (Views: 31.4ms | ActiveRecord: 0.5ms)
+
+
+Started GET "/stories/new" for 127.0.0.1 at 2021-12-16 01:01:32 -0300
+Processing by StoriesController#new as HTML
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  Rendering stories/new.html.erb within layouts/application
+  Rendered stories/_form.html.erb (4.3ms)
+  Rendered stories/new.html.erb within layouts/application (5.8ms)
+  Rendered shared/_navbar.html.erb (0.7ms)
+Completed 200 OK in 34ms (Views: 29.1ms | ActiveRecord: 0.3ms)
+
+
+Started POST "/stories" for 127.0.0.1 at 2021-12-16 01:01:48 -0300
+Processing by StoriesController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"paESgoZskDlkDy8bZ4wui0xcPK9XA5bHK29klNexcJTbHTOranGRgR1XRYdYz8nUFmFxk7zgpC2/Fz1RLLCM0Q==", "story"=>{"title"=>"midnight train", "picture"=>"https://images.fineartamerica.com/images/artworkimages/mediumlarge/2/1-midnight-train-emilio-pasquale.jpg", "content"=>"dvsdfsdfsd", "user_id"=>"1"}, "commit"=>"Create Story"}
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "stories" ("title", "picture", "content", "created_at", "updated_at", "user_id") VALUES (?, ?, ?, ?, ?, ?)[0m  [["title", "midnight train"], ["picture", "https://images.fineartamerica.com/images/artworkimages/mediumlarge/2/1-midnight-train-emilio-pasquale.jpg"], ["content", "dvsdfsdfsd"], ["created_at", "2021-12-16 04:01:48.435991"], ["updated_at", "2021-12-16 04:01:48.435991"], ["user_id", 1]]
+  [1m[35m (177.2ms)[0m  [1m[36mcommit transaction[0m
+Redirected to http://localhost:3000/stories/2
+Completed 302 Found in 194ms (ActiveRecord: 178.2ms)
+
+
+Started GET "/stories/2" for 127.0.0.1 at 2021-12-16 01:01:48 -0300
+Processing by StoriesController#show as HTML
+  Parameters: {"id"=>"2"}
+  [1m[36mStory Load (0.2ms)[0m  [1m[34mSELECT  "stories".* FROM "stories" WHERE "stories"."id" = ? LIMIT ?[0m  [["id", 2], ["LIMIT", 1]]
+  Rendering stories/show.html.erb within layouts/application
+  Rendered stories/show.html.erb within layouts/application (2.3ms)
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  Rendered shared/_navbar.html.erb (2.6ms)
+Completed 200 OK in 27ms (Views: 24.5ms | ActiveRecord: 0.5ms)
+
+
+Started DELETE "/users/sign_out" for 127.0.0.1 at 2021-12-16 01:02:13 -0300
+Processing by Devise::SessionsController#destroy as HTML
+  Parameters: {"authenticity_token"=>"Ow2kuEPL83HUo6FkH3Cu248ObCwyD4f17z6AzXM6xhdbE+OkoFNxqwcIbFYx5TPZgIQNAdgQaF0IDIMQZMrrhQ=="}
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mcommit transaction[0m
+Redirected to http://localhost:3000/
+Completed 302 Found in 7ms (ActiveRecord: 0.4ms)
+
+
+Started GET "/" for 127.0.0.1 at 2021-12-16 01:02:13 -0300
+Processing by StoriesController#index as HTML
+  Rendering stories/index.html.erb within layouts/application
+  [1m[36mStory Load (0.2ms)[0m  [1m[34mSELECT "stories".* FROM "stories"[0m
+  Rendered stories/index.html.erb within layouts/application (2.3ms)
+  Rendered shared/_navbar.html.erb (0.7ms)
+Completed 200 OK in 33ms (Views: 31.5ms | ActiveRecord: 0.2ms)
+
+
+Started GET "/stories/2" for 127.0.0.1 at 2021-12-16 01:02:15 -0300
+Processing by StoriesController#show as HTML
+  Parameters: {"id"=>"2"}
+  [1m[36mStory Load (0.1ms)[0m  [1m[34mSELECT  "stories".* FROM "stories" WHERE "stories"."id" = ? LIMIT ?[0m  [["id", 2], ["LIMIT", 1]]
+  Rendering stories/show.html.erb within layouts/application
+  Rendered stories/show.html.erb within layouts/application (1.8ms)
+  Rendered shared/_navbar.html.erb (1.8ms)
+Completed 200 OK in 30ms (Views: 28.3ms | ActiveRecord: 0.1ms)
+
+
+Started GET "/stories/2/edit" for 127.0.0.1 at 2021-12-16 01:02:18 -0300
+Processing by StoriesController#edit as HTML
+  Parameters: {"id"=>"2"}
+  [1m[36mStory Load (0.1ms)[0m  [1m[34mSELECT  "stories".* FROM "stories" WHERE "stories"."id" = ? LIMIT ?[0m  [["id", 2], ["LIMIT", 1]]
+Completed 500 Internal Server Error in 4ms (ActiveRecord: 0.1ms)
+
+
+  
+NoMethodError (undefined method `stories' for nil:NilClass):
+  
+app/controllers/stories_controller.rb:69:in `correct_user'
